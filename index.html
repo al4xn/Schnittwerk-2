@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0e141d">
+<title>Schnittwerk</title>
+<!-- Gotham is a licensed font. Montserrat Black is the closest free match (loaded only when online, optional).
+     If you own Gotham Black, add: @font-face{font-family:"Gotham Black";src:url(GothamBlack.woff2)} -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+</head>
+<body>
+<canvas id="world"></canvas>
+
+<div id="loading" class="screen show">
+  <svg class="logo" viewBox="0 0 120 120"><rect x="14" y="26" width="92" height="80" rx="10" fill="#c98b4c" stroke="#7a4a22" stroke-width="6"/><path d="M14 88 106 40" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-dasharray="11 8"/><path d="M84 8 108 4 96 30z" fill="#dfe8f2" stroke="#8ea3bb" stroke-width="3"/></svg>
+  <h1>SCHNITTWERK</h1>
+  <div class="bar"><i id="lbar"></i></div>
+  <p id="ltip">Starting ...</p>
+</div>
+
+<div id="login" class="screen">
+  <div class="card">
+    <h1 style="font-size:28px;text-align:center">SCHNITTWERK</h1>
+    <div id="lNet" class="net down"><i class="dot"></i><span></span><button class="ibtn sm" id="lSrv" type="button" aria-label="server"></button></div>
+    <input type="text" id="lUser" maxlength="14" autocomplete="username" autocapitalize="none" spellcheck="false">
+    <div class="pw"><input type="password" id="lPass" maxlength="64" autocomplete="current-password"><button class="eye" id="lEye" type="button"></button></div>
+    <small id="lMsg"></small>
+    <div class="two"><button class="btn" id="lLogin"></button><button class="btn alt" id="lReg"></button></div>
+    <button class="btn alt sm" id="lGuest"></button>
+    <small id="lNote"></small>
+  </div>
+</div>
+
+<div id="menu" class="screen">
+  <div class="deco" style="left:8%;top:18%;width:54px;height:54px;background:#c98b4c"></div>
+  <div class="deco" style="right:10%;top:26%;width:40px;height:40px;background:#8f98a3;animation-delay:-2s"></div>
+  <div class="deco" style="left:16%;bottom:14%;width:46px;height:30px;background:#c4573b;animation-delay:-4s"></div>
+  <div class="deco" style="right:14%;bottom:18%;width:60px;height:24px;background:#9fdcf0;animation-delay:-1s"></div>
+  <div class="pchip" id="profChip"></div>
+  <div class="top"><button class="ibtn" id="mOwner" style="display:none" aria-label="owner"></button><i class="dot netdot down"></i><div class="chip" id="menuCoins"></div></div>
+  <h1>SCHNITTWERK</h1>
+  <div class="col">
+    <button class="btn" id="mPlay"></button>
+    <div class="two"><button class="btn alt" id="mField"></button><button class="btn alt" id="mSocial"></button></div>
+    <div class="two"><button class="btn alt" id="mShop"></button><button class="btn alt" id="mSet"></button></div>
+  </div>
+  <small id="menuVer"></small>
+</div>
+
+<div id="maps" class="screen">
+  <div class="hd"><button class="ibtn" id="mapsBack"></button><h2 data-i="maps"></h2><div class="chip" id="mapsCoins"></div></div>
+  <div id="mapGrid"></div>
+</div>
+
+<div id="hud">
+  <div class="top">
+    <div class="chip" id="hudCoins"></div>
+    <div id="pg"><div id="pgBar"><div id="pgFill"></div><span id="pgTxt"></span></div></div>
+    <button class="ibtn" id="hShop"></button><button class="ibtn" id="hSet"></button><button class="ibtn" id="hHome"></button>
+  </div>
+  <div id="duelHud"><div class="dh-side"><span id="dhName"></span><div class="dh-bar"><i id="dhFill"></i></div><b id="dhPct">0%</b></div><div class="dh-mid"><span id="dhPot"></span><span id="dhTime">–</span></div></div>
+  <button class="btn sm" id="btnCollect"></button>
+  <div id="lab"><button class="ibtn" id="labTog" aria-label="lab"></button><div id="labBody"></div></div>
+  <div id="dock"><button class="dtog" id="dockToggle" aria-label="hotbar"></button><div id="dockBody"><div id="tray"></div><div id="toolbar"></div></div></div>
+</div>
+
+<div id="shop" class="screen">
+  <div class="hd"><button class="ibtn" id="shopBack"></button><h2 data-i="shop"></h2><div class="chip" id="shopCoins"></div></div>
+  <div id="shopTabs"><button data-tab="tools" data-i="tab_tools"></button><button data-tab="upg" data-i="tab_upg"></button><button data-tab="items" data-i="tab_items"></button><button data-tab="skins" data-i="tab_looks"></button></div>
+  <div id="shopList"></div>
+</div>
+
+<div id="settings" class="screen">
+  <div class="hd"><button class="ibtn" id="setBack"></button><h2 data-i="settings"></h2></div>
+  <div class="scroll">
+    <div class="set"><label data-i="s_account"></label><div id="accInfo"></div><div id="accBtns"></div></div>
+    <div class="set"><label data-i="s_lang"></label><div class="seg wrap" id="segL"></div></div>
+    <div class="set"><label data-i="s_vol"></label><input type="range" id="volR" min="0" max="1" step="0.05"></div>
+    <div class="set"><label data-i="s_gfx"></label><div class="seg" id="segQ"></div></div>
+    <div class="set"><label data-i="s_shader"></label><div class="seg wrap" id="segS"></div></div>
+    <div class="set"><label data-i="s_blur"></label><div class="seg" id="segB"></div></div>
+    <div class="set"><label data-i="s_vib"></label><div class="seg" id="segH"></div></div>
+    <div class="set"><label data-i="s_code"></label><input type="text" class="up" id="codeIn" maxlength="24" autocomplete="off" placeholder="CODE"><div class="two"><button class="btn sm" id="codeBtn" data-i="redeem"></button><button class="btn sm alt" id="codesBtn" style="display:none"></button></div><small id="codeMsg" style="color:var(--soft)"></small></div>
+    <div class="set"><label data-i="s_server"></label><div id="srvInfo"></div><button class="btn sm alt" id="srvBtn" data-i="s_server"></button></div>
+    <div class="set"><label id="verLbl"></label><div class="log" id="logBox"></div></div>
+    <div class="set"><label data-i="s_priv"></label><small data-i="s_priv_t" style="color:var(--soft);line-height:1.4;font-weight:700"></small></div>
+  </div>
+</div>
+
+<div id="codes" class="screen">
+  <div class="hd"><button class="ibtn" id="codesBack"></button><h2 data-i="codes_title"></h2></div>
+  <div class="scroll" id="codeList"></div>
+</div>
+
+<div id="profile" class="screen">
+  <div class="hd"><button class="ibtn" id="profBack"></button><h2 data-i="profile"></h2></div>
+  <div class="pwrap">
+    <div class="pside">
+      <div id="profHead"></div>
+      <div class="tabs" id="profTabs"><button data-t="ov" data-i="p_overview"></button><button data-t="ti" data-i="p_titles"></button><button data-t="ms" data-i="p_ms"></button><button data-t="inv" data-i="p_inv"></button></div>
+    </div>
+    <div class="scroll" id="profBody"></div>
+  </div>
+</div>
+
+<div id="social" class="screen">
+  <div class="hd"><button class="ibtn" id="soBack"></button><h2 data-i="social_title"></h2><i class="dot netdot down"></i></div>
+  <div class="tabs" id="soTabs"><button data-t="friends" data-i="friends"></button><button data-t="req"><span data-i="so_req"></span><b class="nb" id="soReqB"></b></button><button data-t="players" data-i="so_players"></button></div>
+  <div class="scroll" id="soBody"></div>
+</div>
+
+<div id="owner" class="screen">
+  <div class="hd"><button class="ibtn" id="owBack"></button><h2 data-i="owner_title"></h2></div>
+  <div class="tabs" id="owTabs"><button data-t="players" data-i="ow_players"></button><button data-t="tools" data-i="ow_tools"></button></div>
+  <div class="scroll" id="owBody"></div>
+</div>
+
+<div id="complete" class="screen">
+  <div class="big" id="cIcon"></div>
+  <h1 style="font-size:30px" data-i="map_clear"></h1>
+  <p id="cTxt" style="color:var(--soft);line-height:1.5"></p>
+  <div style="display:flex;gap:10px;margin-top:8px"><button class="btn alt" id="cMenu"></button><button class="btn" id="cNext"></button></div>
+</div>
+
+<div id="duelEnd" class="screen">
+  <div class="big de-i" id="deIcon"></div>
+  <h1 id="deTitle" style="font-size:34px"></h1>
+  <p id="deTxt"></p>
+  <div class="row2"><button class="btn alt" id="deMenu" data-i="menu_btn"></button><button class="btn" id="deRematch" data-i="rematch"></button></div>
+</div>
+
+<div id="cdown"><div class="cd-num" id="cdNum"></div></div>
+<div id="dlg" class="modal"><div class="mbox" id="dlgBox"></div></div>
+<div id="toasts"></div>
+
+<script src="game.js"></script>
+</body>
+</html>
